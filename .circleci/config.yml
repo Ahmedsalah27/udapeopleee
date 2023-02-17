@@ -100,11 +100,11 @@ jobs:
     docker:
       - image: cimg/node:13.8.0
     steps:
-       - checkout
+      - checkout
       - restore_cache:
           keys: [frontend-deps]
       - run:
-          name: frontend-end scan
+          name: frontend-end Scan
           command: |
              cd frontend
              npm install
@@ -118,7 +118,7 @@ jobs:
       - restore_cache:
           keys: [backend-deps]
       - run:
-          name: Back-end scan
+          name: Back-end Scan
           command: |
              cd backend
              npm install

@@ -193,28 +193,26 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment
-#       # Here's where you will add some code to rollback on failure      
-
-#   configure-infrastructure:
-#     docker:
-#       - image: cimg/base:stable
-#     steps:
-#       - checkout
-#       - install_awscli
-#       - install_ansible   
-#       - add_ssh_keys:
-#           fingerprints: ["71:1a:a4:0a:b5:d1:b9:8a:e3:09:fb:be:36:b3:9d:91"]
-#       - attach_workspace:
-#           at: ~/
-#       - run:
-#           name: Configure server
-#           command: |
-#             cd .circleci/ansible
-#             cat inventory.txt
-#             ansible-playbook -i inventory.txt configure-server.yml
-#       - destroy-environment
-# #       # Here's where you will add some code to rollback on failure      
-
+     
+  configure-infrastructure:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible   
+      - add_ssh_keys:
+          fingerprints: ["ce:74:8b:3d:c2:0e:c1:19:67:bd:e1:00:f4:0a:db:27"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
+    
 #   run-migrations:
 #     docker:
 #       - image: cimg/python:3.10
@@ -390,8 +388,8 @@ workflows:
           filters:
             branches:
               only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:

@@ -55,13 +55,13 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            # SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
-            # if (( $SUCCESS == 1 ));
-            # then
+            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
+            if (( $SUCCESS == 1 ));
+            then
               cd ~/project/backend
               npm install
               npm run migration:revert
-            # fi
+            fi
             
 jobs:
   build-frontend:
@@ -215,7 +215,7 @@ jobs:
     
   run-migrations:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - install_awscli

@@ -359,7 +359,7 @@ jobs:
       - run:
           name: Install tar and gzip utilities
           command: |
-            yum install -y tar gzip
+            sudo apt-get install tar gzip
       - run:
           name: Install tar and gzip utilities
           command: yum install -y tar gzip
@@ -393,7 +393,7 @@ jobs:
       - run:
           name: Install tar and gzip utilities
           command: |
-            yum install -y tar gzip
+            sudo apt-get install tar gzip
       - run:
           name: Get old stack workflow id
           command: |

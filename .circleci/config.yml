@@ -361,9 +361,6 @@ jobs:
           command: |
             sudo apt-get install tar gzip
       - run:
-          name: Install tar and gzip utilities
-          command: yum install -y tar gzip
-      - run:
           working_directory: .circleci/files
           name: Update cloudfront distribution
           command: |

@@ -358,7 +358,8 @@ jobs:
       - install_nodejs
       - run:
           name: Install tar and gzip utilities
-          command: yum install -y tar gzip
+          command: |
+            yum install -y tar gzip
       - run:
           name: Install tar and gzip utilities
           command: yum install -y tar gzip
@@ -391,7 +392,8 @@ jobs:
       - install_nodejs
       - run:
           name: Install tar and gzip utilities
-          command: yum install -y tar gzip
+          command: |
+            yum install -y tar gzip
       - run:
           name: Get old stack workflow id
           command: |

@@ -360,6 +360,9 @@ jobs:
           name: Install tar and gzip utilities
           command: yum install -y tar gzip
       - run:
+          name: Install tar and gzip utilities
+          command: yum install -y tar gzip
+      - run:
           working_directory: .circleci/files
           name: Update cloudfront distribution
           command: |
@@ -379,24 +382,40 @@ jobs:
       - revert-migrations
       # Here's where you will add some code to rollback on failure  
 
-# cleanup:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Get old stack workflow id
-#           command: |
-#             # your code here
-#             export OldWorkflowID="the id here"
-#             export STACKS=[] #put the list of stacks here
-#       - run:
-#           name: Remove old stacks and files
-#           command: |
-#             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-#             then
-#               # your code here
-#             fi
+cleanup:
+    ocker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - run:
+          name: Install tar and gzip utilities
+          command: yum install -y tar gzip
+      - run:
+          name: Get old stack workflow id
+          command: |
+            export BLUE_WORKFLOW_ID=`cat blue_workflow_id.txt`
+            echo "BLUE_WORKFLOW_ID => $BLUE_WORKFLOW_ID"
+            printf "export BLUE_WORKFLOW_ID=%s" "$BLUE_WORKFLOW_ID" >> $BASH_ENV
+      - run:
+          name: Remove old stacks and files
+          command: |
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+            if [[ -z "${STACKS[*]}" ]] || [[ -z "${BLUE_WORKFLOW_ID}" ]]
+            then
+              echo "No stacks or old workflow ID found to remove."
+              exit 0
+            fi
+            cat blue_workflow_id.txt
+            echo OldWorkflowId: "${BLUE_WORKFLOW_ID}"
+            if [[ "${STACKS[@]}" =~ "${BLUE_WORKFLOW_ID}" ]]
+            then
+              aws s3 rm s3://udapeople-${BLUE_WORKFLOW_ID} --recursive
+              aws cloudformation delete-stack --stack-name udapeople-backend-${BLUE_WORKFLOW_ID}
+              aws cloudformation delete-stack --stack-name udapeople-frontend-${BLUE_WORKFLOW_ID}
+            fi
             
 
 workflows:
@@ -429,5 +448,5 @@ workflows:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - cleanup:
+          requires: [cloudfront-update]

@@ -331,11 +331,15 @@ jobs:
       - run:
           name: Backend smoke test
           command: |
-            if curl -s -v --connect-timeout 30 --retry-connrefused 5 "$API_URL/api/status" | grep "ok"
+            export BACKEND_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[].Instances[].PublicIpAddress' --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            if curl -s "${API_URL}/api/status" | grep "ok"
             then
-                exit 0
+              echo "backend is working successfully"
+              exit 0
             else
-                exit 1
+              exit 1
             fi
       - run:
           name: Frontend smoke test

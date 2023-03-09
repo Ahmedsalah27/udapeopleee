@@ -66,11 +66,11 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-deps-{{ checksum "frontend/package-lock.json" }}']
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -79,24 +79,25 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: 'frontend-deps-{{ checksum "frontend/package-lock.json" }}'
+          key: frontend-build
+          
 
   build-backend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-deps-{{ checksum "backend/package-lock.json" }}']
+          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
-             cd backend
-             npm install
-             npm run build
+            cd backend
+            npm install
+            npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: 'backend-deps-{{ checksum "backend/package-lock.json" }}'
+          key: backend-build
 
   test-frontend:
     docker:

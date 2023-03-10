@@ -1,5 +1,6 @@
 Description: >
   UdaPeople backend stack.
+
 Parameters:
   ID:
     Description: Unique identifier.
@@ -27,7 +28,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 9100
           ToPort: 9100
-          CidrIp: 0.0.0.0/0 
+          CidrIp: 0.0.0.0/0  
 
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -35,8 +36,10 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: udapeople 
-      ImageId: ami-0dfb6769e523bf035 
+      KeyName: udacity 
+      ImageId: ami-0149b2da6ceec4bb0
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+        - Key: Project
+          Value: Udapeople  

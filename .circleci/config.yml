@@ -388,8 +388,8 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name ID \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --stack-name InitialStack \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
             
       - destroy-environment
       - revert-migrations  
